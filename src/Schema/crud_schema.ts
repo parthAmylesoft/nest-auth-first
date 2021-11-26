@@ -15,9 +15,6 @@ export class Crud {
   @Prop()
   year: string;
 
-  @Prop({ default: "user" })
-  role: string;
-
   @Prop({ default: "yes" })
   active: string;
 

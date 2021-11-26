@@ -12,9 +12,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     year: string
 
-    @IsOptional()
-    role: string
-
     @IsNotEmpty()
     @IsBoolean()
     active: string

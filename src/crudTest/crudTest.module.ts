@@ -11,6 +11,8 @@ import { AdminSchema } from "src/Schema/adminSchema";
   imports: [
     MongooseModule.forFeature([
       { name: "Crud", schema: CrudSchema },
+      { name: 'User', schema: UserSchema },
+      { name: 'Admin', schema: AdminSchema },
     ]),
   ],
   controllers: [CrudTestController],

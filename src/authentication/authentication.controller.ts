@@ -1,7 +1,7 @@
 import { Controller, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthenticationServices } from "./authentication.services";
-import { Public } from "./gaurd/public.decoder";
+import { Public } from "./gaurd/public.decorator";
 
 @Controller('auth')
 export class AuthenticationController {

@@ -18,7 +18,7 @@ config();
   ],
   providers: [{
     provide: APP_GUARD,
-    useClass: JwtAuthGuard
+    useClass: JwtAuthGuard    
   }]
 })
 export class MainModule {}

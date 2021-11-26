@@ -11,6 +11,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { Response } from "express";
+import { Roles } from "src/authentication/gaurd/role.decorator";
+import { RolesGuard } from "src/authentication/gaurd/role.guard";
 import { CrudTestService } from "./crudTest.service";
 import { CreateUserDto, updateUserDto } from "./dto/create.user.dto";
 
@@ -27,6 +29,8 @@ export class CrudTestController {
     return this.crudTest.getSingleCrud(id, res);
   }
   @Post()
+  @UseGuards(RolesGuard)
+  @Roles("admin")
   postCrudApi(@Body() CreateUser: CreateUserDto, @Res() res: Response) {
     return this.crudTest.postCrud(CreateUser, res);
   }
