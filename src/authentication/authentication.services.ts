@@ -10,6 +10,7 @@ import { LoginUserDto } from "./dto/login.user.dto";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "./dto/jwt.dto";
 import { loginAdminDto } from "./dto/login.admin.dto";
+import { registerAdminDto } from "./dto/register.admin.dto";
 
 Injectable();
 export class AuthenticationServices {
@@ -18,6 +19,29 @@ export class AuthenticationServices {
     @InjectModel("User") private readonly userModel: Model<UserDocument>,
     @InjectModel("Admin") private readonly adminModel: Model<AdminDocument>
   ) {}
+
+  async createAdmin(admin: registerAdminDto, res) {
+    const isEmailValidate = await this.adminModel.findOne({
+      email: admin.email,
+    });
+    if (isEmailValidate) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        message: "Email Already Exits",
+        statusCode: HttpStatus.BAD_REQUEST,
+      });
+    } else {
+      const securePassword = await bcrypt.hash(admin.password, 12);
+      admin.password = securePassword;
+      const registerAdmin = await this.adminModel.create(admin);
+      if (registerAdmin) {
+        res.status(HttpStatus.OK).json({
+          message: "Register SuccessFully",
+          statusCode: HttpStatus.OK,
+          data: registerAdmin,
+        });
+      }
+    }
+  }
 
   async createUser(user: RegisterUserDto, res: Response) {
     const emailValidate = await this.userModel.findOne({ email: user.email });
@@ -51,7 +75,10 @@ export class AuthenticationServices {
       );
       if (comparePassword) {
         const payload: JwtPayload = getLoginUser.id;
-        const token: string = this.jwtService.sign({ id: payload }, { secret: process.env.SECRETKEY});
+        const token: string = this.jwtService.sign(
+          { id: payload },
+          { secret: process.env.SECRETKEY }
+        );
         res.status(HttpStatus.OK).json({
           statusCode: HttpStatus.OK,
           message: "Login successfully",
@@ -71,21 +98,37 @@ export class AuthenticationServices {
     }
   }
 
-  async loginAdmin(adminLogin:loginAdminDto,res) {
-    const getLoginAdmin = await this.adminModel.findOne({ email: adminLogin.email })
-    if(getLoginAdmin){
-      const payload: JwtPayload = getLoginAdmin.id;
-        const token: string = this.jwtService.sign({ id: payload },{ secret: process.env.SECRETKEY});
+  async loginAdmin(adminLogin: loginAdminDto, res) {
+    const getLoginAdmin = await this.adminModel.findOne({
+      email: adminLogin.email,
+    });
+    if (getLoginAdmin) {
+      const comparePassword = await bcrypt.compare(
+        adminLogin.password,
+        getLoginAdmin.password
+      );
+      if (comparePassword) {
+        const payload: JwtPayload = getLoginAdmin.id;
+        const token: string = this.jwtService.sign(
+          { id: payload },
+          { secret: process.env.SECRETKEY }
+        );
         res.status(HttpStatus.OK).json({
           statusCode: HttpStatus.OK,
           message: "Login SuccessFully",
-          Token: token
-        })
-    }else{
+          Token: token,
+        });
+      } else {
+        res.status(HttpStatus.BAD_REQUEST).json({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: "Invalid login credentials",
+        });
+      }
+    } else {
       res.status(HttpStatus.BAD_REQUEST).json({
         statusCode: HttpStatus.NOT_FOUND,
-        message: "Invalid login credentials"
-      })
+        message: "Invalid login credentials",
+      });
     }
   }
 

@@ -8,6 +8,12 @@ export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationServices){}
 
     @Public()
+    @Post("register-admin")
+    async registerAdmin(@Req() req:Request,@Res() res: Response){
+        return await this.authenticationService.createAdmin(req.body,res)
+    }
+
+    @Public()
     @Post('register-user')
     async registerUser(@Req() req:Request, @Res() res: Response){
         return await this.authenticationService.createUser(req.body,res)

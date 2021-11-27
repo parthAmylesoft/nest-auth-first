@@ -28,6 +28,7 @@ export class CrudTestController {
   getOneCrudApi(@Param("id") id: string, @Res() res: Response) {
     return this.crudTest.getSingleCrud(id, res);
   }
+
   @Post()
   @UseGuards(RolesGuard)
   @Roles("admin")
@@ -35,6 +36,8 @@ export class CrudTestController {
     return this.crudTest.postCrud(CreateUser, res);
   }
   @Put("/:id")
+  @UseGuards(RolesGuard)
+  @Roles("admin")
   putCrudApi(
     @Param("id") id: string,
     @Body() updateUser: updateUserDto,
@@ -42,6 +45,7 @@ export class CrudTestController {
   ) {
     return this.crudTest.putCrud(updateUser, res, id);
   }
+
   @Delete("/:id")
   deleteCrudApi(@Param("id") id: string, @Res() res: Response) {
     return this.crudTest.deleteCrud(id, res);
