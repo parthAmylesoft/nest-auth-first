@@ -1,10 +1,8 @@
-import { HttpCode, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Response } from "express";
 import { Model } from "mongoose";
-import { Admin } from "src/Schema/adminSchema";
 import { Crud } from "src/Schema/crud_schema";
-import { User } from "src/Schema/userSchema";
 import { CreateUserDto, updateUserDto } from "./dto/create.user.dto";
 
 @Injectable()

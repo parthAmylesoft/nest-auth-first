@@ -7,6 +7,7 @@ import { config } from "dotenv";
 import { AuthenticationModule } from "./authentication/authentication.module";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./authentication/gaurd/jwt.auth.guard";
+import { FileUploadModule } from "./fileUpload/fileUpload.module";
 config();
 
 @Module({
@@ -15,6 +16,7 @@ config();
     AppModule,
     CrusTestModule,
     AuthenticationModule,
+    FileUploadModule
   ],
   providers: [{
     provide: APP_GUARD,
